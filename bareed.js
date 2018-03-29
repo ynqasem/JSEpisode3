@@ -42,18 +42,28 @@ class Point {
 **********************************************************/
 class Wallet {
   // implement Wallet!
-  constructor(money) {
+  constructor(x) {
+    this.money = x || 0;
+    this.credit = 0;
+    this.debit = 0;
+
 
   }
 
   credit(amount) {
+    this.money += amount;
 
   }
 
   debit(amount) {
+    this.money -= amount;
 
   }
+
 }
+
+
+let wallet = new Wallet(500);
 
 /**********************************************************
 * Person - defines a person with a name and feelings
