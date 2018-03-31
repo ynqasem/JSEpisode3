@@ -22,12 +22,11 @@ class Point {
   }
 
   static randomPoint(maxX, maxY) {
-    let x = Math.random() * maxX;
-    let y = Math.random() * maxY;
+    let x = Math.random() * (maxX || 100);
+    let y = Math.random() * (maxY || 100);
     return new Point(x, y);
   }
 }
-
 
 /**********************************************************
 * Wallet - keeps track of money
@@ -104,8 +103,22 @@ class Person {
 *
 * new vendor = new Vendor(name, x, y);
 **********************************************************/
-class Vendor {
+class Vendor extends Person {
   // implement Vendor!
+  constructor(name, x, y) {
+    super(name, x, y);
+    //console.log(this.location)
+    this.range = 5;
+    this.price = 1;
+
+  }
+
+  sellTo(customer, numberOfIceCreams) {
+    this.moveTo(customer.location);
+    this.wallet.credit(numberOfIceCreams*this.price);
+    customer.wallet.debit(numberOfIceCreams*this.price);
+  }
+
 }
 
 
@@ -125,8 +138,30 @@ class Vendor {
 *
 * new customer = new Customer(name, x, y);
 **********************************************************/
-class Customer {
+class Customer extends Person {
   // implement Customer!
+  constructor(name, x, y) {
+    super(name, x, y);
+    this.wallet = new Wallet(10);
+   
+  }
+
+   _isInRange(vendor) {
+    return (this.location.distanceTo(vendor.location) <= vendor.range);
+      
+    }
+
+  _haveEnoughMoney(vendor, numberOfIceCreams) {
+    return this.wallet.money >= vendor.price*numberOfIceCreams;
+  }
+
+  requestIceCream(vendor, numberOfIceCreams) {
+    if (this._isInRange(vendor) && this._haveEnoughMoney(vendor, numberOfIceCreams)) {
+       vendor.sellTo(this, numberOfIceCreams);
+    }
+  }
+
+
 }
 
 
